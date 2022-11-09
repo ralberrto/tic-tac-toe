@@ -3,7 +3,25 @@
 }
 
 body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: 'Courier New', Courier, monospace;
     background-color: aqua;
     margin: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
+#board-container {
+    --board-dimension: min(90vh, 90vw);
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    width: var(--board-dimension);
+    height: var(--board-dimension);
+    margin: min(5vw, 5vh);
+}
+
+#board-container div {
+    background-color: white;
 }
