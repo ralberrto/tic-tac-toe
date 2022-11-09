@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Rubik-Bubbles;
+    src: url(./Rubik_Bubbles/RubikBubbles-Regular.ttf);
+}
+
 * {
     box-sizing: border-box;
 }
@@ -23,5 +28,14 @@ body {
 }
 
 #board-container div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
+    font-family: Rubik-Bubbles;
+    font-size: 5rem;
+}
+
+#board-container div:active {
+    background-color: pink;
 }

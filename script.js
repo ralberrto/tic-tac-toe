@@ -43,6 +43,22 @@ const Gameboard = (function(boardContainer) {
     return {nodesBoard};
 })(boardContainer);
 
+const displayController = function(nodesBoard) {
+    const onClick = function() {
+        this.textContent = "X"
+        //console.log(`You clicked ${this.getAttribute("position")}`);
+    };
+
+    const _addEvents = function() {
+        for (i in nodesBoard) {
+            for (j in nodesBoard[i]) {
+                nodesBoard[i][j].addEventListener("click", onClick);
+            }
+        }
+    };
+    _addEvents();
+}(Gameboard.nodesBoard);
+
 const player = function(name) {
     let playerName = name;
     return {playerName, extendName};
