@@ -25,7 +25,8 @@ const Gameboard = (function(boardContainer) {
 
     const _createBoardCell = function(x, y) {
         let divElement = document.createElement("div");
-        divElement.setAttribute("position", String(x) + "," + String(y));
+        divElement.setAttribute("row", "r" + String(x));
+        divElement.setAttribute("col", "c" + String(y));
         return divElement;
     };
 
@@ -44,7 +45,7 @@ const Gameboard = (function(boardContainer) {
 })(boardContainer);
 
 const displayController = function(nodesBoard) {
-    const onClick = function() {
+    const _onClick = function() {
         this.textContent = "X"
         //console.log(`You clicked ${this.getAttribute("position")}`);
     };
@@ -52,7 +53,7 @@ const displayController = function(nodesBoard) {
     const _addEvents = function() {
         for (i in nodesBoard) {
             for (j in nodesBoard[i]) {
-                nodesBoard[i][j].addEventListener("click", onClick);
+                nodesBoard[i][j].addEventListener("click", _onClick);
             }
         }
     };

@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Courier New', Courier, monospace;
-    background-color: aqua;
+    background-color: #27272a;
     margin: 0;
     height: 100vh;
     width: 100vw;
@@ -25,17 +25,28 @@ body {
     width: var(--board-dimension);
     height: var(--board-dimension);
     margin: min(5vw, 5vh);
+    background-color: #fafafa;
+    padding: 1em;
 }
 
 #board-container div {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
     font-family: Rubik-Bubbles;
     font-size: 5rem;
 }
 
 #board-container div:active {
     background-color: pink;
+}
+
+#board-container div[row="r1"] {
+    border-top: 2px solid #171717;
+    border-bottom: 2px solid #171717;
+}
+
+#board-container div[col="c1"] {
+    border-left: 2px solid #171717;
+    border-right: 2px solid #171717;
 }
