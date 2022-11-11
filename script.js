@@ -44,9 +44,33 @@ const Gameboard = (function(boardContainer) {
     return {nodesBoard};
 })(boardContainer);
 
-const displayController = function(nodesBoard) {
+const player = function(symbol) {
+    const getSymbol = function() {
+        return symbol
+    };
+
+    return {getSymbol};
+};
+
+playerA = player("X");
+playerB = player("O");
+
+const displayController = function(nodesBoard, players) {
+    let _binaryStatus = true;
+
+    const startFlow = function() {
+        if (_binaryStatus) {
+            this.textContent = playerA.getSymbol();
+            _binaryStatus = false;
+        }
+        else {
+            this.textContent = playerB.getSymbol();
+            _binaryStatus = true;
+        }
+    };
+
     const _onClick = function() {
-        this.textContent = "X"
+        startFlow.call(this);
         //console.log(`You clicked ${this.getAttribute("position")}`);
     };
 
@@ -57,10 +81,7 @@ const displayController = function(nodesBoard) {
             }
         }
     };
-    _addEvents();
-}(Gameboard.nodesBoard);
 
-const player = function(name) {
-    let playerName = name;
-    return {playerName, extendName};
-};
+    _addEvents();
+
+}(Gameboard.nodesBoard, [playerA, playerB]);

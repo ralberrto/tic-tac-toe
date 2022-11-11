@@ -26,7 +26,7 @@ body {
     height: var(--board-dimension);
     margin: min(5vw, 5vh);
     background-color: #fafafa;
-    padding: 1em;
+    padding: 1rem;
 }
 
 #board-container div {
