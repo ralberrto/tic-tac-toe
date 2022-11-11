@@ -37,8 +37,8 @@ body {
     font-size: 5rem;
 }
 
-#board-container div:active {
-    background-color: pink;
+#board-container div:active:not(.unactivable) {
+    background-color: #f87171;
 }
 
 #board-container div[row="r1"] {

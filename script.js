@@ -58,19 +58,26 @@ playerB = player("O");
 const displayController = function(nodesBoard, players) {
     let _binaryStatus = true;
 
-    const startFlow = function() {
+    const _startFlow = function() {
         if (_binaryStatus) {
             this.textContent = playerA.getSymbol();
             _binaryStatus = false;
+            _removeEvent.call(this);
         }
         else {
             this.textContent = playerB.getSymbol();
             _binaryStatus = true;
+            _removeEvent.call(this);
         }
     };
 
+    const _removeEvent = function() {
+            this.removeEventListener("click", _onClick);
+            this.classList.toggle("unactivable");
+    };
+
     const _onClick = function() {
-        startFlow.call(this);
+        _startFlow.call(this);
         //console.log(`You clicked ${this.getAttribute("position")}`);
     };
 
