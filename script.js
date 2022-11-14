@@ -52,8 +52,7 @@ const player = function(symbol) {
     return {getSymbol};
 };
 
-playerA = player("X");
-playerB = player("O");
+players = [player("X"), player("O")];
 
 const displayController = function(nodesBoard, players) {
     let _binaryStatus = true;
@@ -91,4 +90,4 @@ const displayController = function(nodesBoard, players) {
 
     _addEvents();
 
-}(Gameboard.nodesBoard, [playerA, playerB]);
+}(Gameboard.nodesBoard, players);
