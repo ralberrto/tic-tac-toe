@@ -52,20 +52,19 @@ const player = function(symbol) {
     return {getSymbol};
 };
 
-playerA = player("X");
-playerB = player("O");
+players = [player("X"), player("O")];
 
 const displayController = function(nodesBoard, players) {
     let _binaryStatus = true;
 
     const _startFlow = function() {
         if (_binaryStatus) {
-            this.textContent = playerA.getSymbol();
+            this.textContent = players[0].getSymbol();
             _binaryStatus = false;
             _removeEvent.call(this);
         }
         else {
-            this.textContent = playerB.getSymbol();
+            this.textContent = players[1].getSymbol();
             _binaryStatus = true;
             _removeEvent.call(this);
         }
@@ -91,4 +90,4 @@ const displayController = function(nodesBoard, players) {
 
     _addEvents();
 
-}(Gameboard.nodesBoard, [playerA, playerB]);
+}(Gameboard.nodesBoard, players);
