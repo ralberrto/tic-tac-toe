@@ -3,17 +3,6 @@ boardContainer = document.getElementById("board-container");
 
 const Gameboard = (function(boardContainer) {
 
-    const _createBoardArray = function(rows, columns) {
-        //let row = Array.apply(null, Array(columns));
-        //let row =  [...Array(3)];
-        array2d = [...Array(rows)];
-        for (let i in array2d) {
-            array2d[i] = [...Array(columns)];
-        }
-        array2d = _populateBoardArray(array2d);
-        return array2d;
-    };
-
     const _populateBoardArray = function(board) {
         for (let i in board) {
             for (let j in board[i]) {
@@ -38,7 +27,10 @@ const Gameboard = (function(boardContainer) {
         }
     };
 
-    const nodesBoard = _createBoardArray(3, 3);
+    const emptyArray = createEmptyArray(3, 3);
+
+    const nodesBoard = _populateBoardArray(emptyArray);
+
     _renderBoard(boardContainer, nodesBoard);
 
     return {nodesBoard};
@@ -61,14 +53,21 @@ const displayController = function(nodesBoard, players) {
         _playerAsTurn = _playerAsTurn ? false : true;
     };
 
+    const _checkIfWon = function(playerClass) {
+        playedByPlayer = Array.from(boardContainer.querySelectorAll("div." + playerClass));
+
+    };
+
     const _startFlow = function() {
         if (_playerAsTurn) {
             this.textContent = players[0].getSymbol();
+            this.classList.toggle("pa");
             _switchPlayer();
             _removeEvent.call(this);
         }
         else {
             this.textContent = players[1].getSymbol();
+            this.classList.toggle("pb");
             _switchPlayer();
             _removeEvent.call(this);
         }
@@ -95,3 +94,14 @@ const displayController = function(nodesBoard, players) {
     _addEvents();
 
 }(Gameboard.nodesBoard, players);
+
+/* Globally defined functions */
+function createEmptyArray(rows, columns) {
+    //let row = Array.apply(null, Array(columns));
+    //let row =  [...Array(3)];
+    array2d = [...Array(rows)];
+    for (let i in array2d) {
+        array2d[i] = [...Array(columns)];
+    }
+    return array2d;
+};
