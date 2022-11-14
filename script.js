@@ -55,17 +55,21 @@ const player = function(symbol) {
 players = [player("X"), player("O")];
 
 const displayController = function(nodesBoard, players) {
-    let _binaryStatus = true;
+    let _playerAsTurn = true;
+
+    const _switchPlayer = function() {
+        _playerAsTurn = _playerAsTurn ? false : true;
+    };
 
     const _startFlow = function() {
-        if (_binaryStatus) {
+        if (_playerAsTurn) {
             this.textContent = players[0].getSymbol();
-            _binaryStatus = false;
+            _switchPlayer();
             _removeEvent.call(this);
         }
         else {
             this.textContent = players[1].getSymbol();
-            _binaryStatus = true;
+            _switchPlayer();
             _removeEvent.call(this);
         }
     };
