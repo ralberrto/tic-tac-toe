@@ -3,15 +3,6 @@ boardContainer = document.getElementById("board-container");
 
 const Gameboard = (function(boardContainer) {
 
-    const _populateBoardArray = function(board) {
-        for (let i in board) {
-            for (let j in board[i]) {
-                board[i][j] = _createBoardCell(i, j);
-            }
-        }
-        return board;
-    };
-
     const _createBoardCell = function(x, y) {
         let divElement = document.createElement("div");
         divElement.setAttribute("row", "r" + String(x));
@@ -29,7 +20,7 @@ const Gameboard = (function(boardContainer) {
 
     const emptyArray = createEmptyArray(3, 3);
 
-    const nodesBoard = _populateBoardArray(emptyArray);
+    const nodesBoard = populateArray(emptyArray, _createBoardCell);
 
     _renderBoard(boardContainer, nodesBoard);
 
@@ -48,6 +39,8 @@ players = [player("X"), player("O")];
 
 const displayController = function(nodesBoard, players) {
     let _playerAsTurn = true;
+
+    const playerArrays = {"pa": createEmptyArray(3, 3), "pb": createEmptyArray(3, 3)};
 
     const _switchPlayer = function() {
         _playerAsTurn = _playerAsTurn ? false : true;
@@ -104,4 +97,13 @@ function createEmptyArray(rows, columns) {
         array2d[i] = [...Array(columns)];
     }
     return array2d;
+};
+
+function populateArray(emptyArray, genFunction) {
+    for (let i in emptyArray) {
+        for (let j in emptyArray[i]) {
+            emptyArray[i][j] = genFunction(i, j);
+        }
+    }
+    return emptyArray;
 };
