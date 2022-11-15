@@ -94,7 +94,7 @@ const displayController = function(nodesBoard, players) {
         let colsMaxIndex = player.takenSquares[0].length - 1;
         for (let row in player.takenSquares) {
             takenInBckwrdsDiagonal &&= player.takenSquares[row][colsMaxIndex - row];
-            takenInDiagonal &&= player.takenSquares[row][row];x => x
+            takenInDiagonal &&= player.takenSquares[row][row];
         }
         return wonRow || wonCol || takenInBckwrdsDiagonal || takenInDiagonal;
     };

@@ -50,3 +50,33 @@ body {
     border-left: 2px solid #171717;
     border-right: 2px solid #171717;
 }
+
+#screen {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #3f3f46ee;
+}
+
+#screen.on {
+    display: block;
+}
+
+#announcement-box {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    width: max(40%, 260px);
+    height: min(340px, 80%);
+    transform: translate(-50%, -50%) scale(1);
+    background-color: #111827;
+}
+
+#announcement-box.on {
+    display: flex;
+}
