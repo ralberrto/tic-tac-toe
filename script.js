@@ -28,6 +28,10 @@ const Gameboard = (function(boardContainer) {
 })(boardContainer);
 
 const player = function(symbol) {
+    const takenSquares = populateArray(createEmptyArray(3, 3), () => false);
+
+    let won = false;
+
     const getSymbol = function() {
         return symbol
     };
@@ -36,9 +40,15 @@ const player = function(symbol) {
         takenSquares[i][j] = true;
     };
     
-    const takenSquares = populateArray(createEmptyArray(3, 3), () => false);
+    const makeWinner = function() {
+        won = true;
+    };
 
-    return {getSymbol, takeSquare, takenSquares};
+    const isWinner = function() {
+        return won;
+    };
+
+    return {getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
 };
 
 players = [player("X"), player("O")];
@@ -56,9 +66,25 @@ const displayController = function(nodesBoard, players) {
         _playerAsTurn = _playerAsTurn ? false : true;
     };
 
-    const _checkIfWon = function(playerClass) {
-        playedByPlayer = Array.from(boardContainer.querySelectorAll("div." + playerClass));
-
+    const _checkIfWon = function(player) {
+        /* Check for rows */
+        let isWinner = false;
+        isWinner = player.takenSquares.some((row) => row.every((x) => x));
+        if (isWinner) {player.makeWinner(); return null;}
+        /* Check for columns */
+        for (let col in player.takenSquares[0]) {
+            isWinner = player.takenSquares.map(row => row[col]).every(x => x);
+            if (isWinner) {player.makeWinner(); return null;}
+        }
+        /* Check for diagonals */
+        let takenInDiagonal = true, takenInBckwrdsDiagonal = true;
+        let colsMaxIndex = player.takenSquares[0].length - 1;
+        for (let row in player.takenSquares) {
+            takenInBckwrdsDiagonal &&= player.takenSquares[row][colsMaxIndex - row];
+            takenInDiagonal &&= player.takenSquares[row][row];x => x
+        }
+        isWinner = takenInBckwrdsDiagonal || takenInDiagonal;
+        if (isWinner) {player.makeWinner(); return null;}
     };
 
     const _startGame = function() {
@@ -67,6 +93,7 @@ const displayController = function(nodesBoard, players) {
             this.classList.toggle("pa");
             const [row, col] = _determinePosition(this);
             players[0].takeSquare(row, col);
+            _checkIfWon(players[0]);
             _switchPlayer();
             _removeEvent.call(this);
         }
@@ -75,6 +102,7 @@ const displayController = function(nodesBoard, players) {
             this.classList.toggle("pb");
             const [row, col] = _determinePosition(this);
             players[1].takeSquare(row, col);
+            _checkIfWon(players[1]);
             _switchPlayer();
             _removeEvent.call(this);
         }
