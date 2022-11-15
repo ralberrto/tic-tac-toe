@@ -27,10 +27,14 @@ const Gameboard = (function(boardContainer) {
     return {nodesBoard};
 })(boardContainer);
 
-const player = function(symbol) {
+const player = function(name, symbol) {
     const takenSquares = populateArray(createEmptyArray(3, 3), () => false);
 
     let won = false;
+
+    const getName = function() {
+        return name;
+    };
 
     const getSymbol = function() {
         return symbol
@@ -48,10 +52,10 @@ const player = function(symbol) {
         return won;
     };
 
-    return {getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
+    return {getName, getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
 };
 
-players = [player("X"), player("O")];
+players = [player(1, "X"), player(2, "O")];
 
 const displayController = function(nodesBoard, players) {
     let _playerAsTurn = true;
@@ -66,16 +70,25 @@ const displayController = function(nodesBoard, players) {
         _playerAsTurn = _playerAsTurn ? false : true;
     };
 
+    const _declareWinner = function(player) {
+        const isWinner = _checkIfWon(player);
+        if (isWinner) {
+            player.makeWinner()
+            alert(`Player ${player.getName()} has won!`);
+        }
+    };
+
     const _checkIfWon = function(player) {
         /* Check for rows */
-        let isWinner = false;
-        isWinner = player.takenSquares.some((row) => row.every((x) => x));
-        if (isWinner) {player.makeWinner(); return null;}
+        let wonRow = player.takenSquares.some((row) => row.every((x) => x));
+
         /* Check for columns */
+        let wonCol;
         for (let col in player.takenSquares[0]) {
-            isWinner = player.takenSquares.map(row => row[col]).every(x => x);
-            if (isWinner) {player.makeWinner(); return null;}
+            wonCol = player.takenSquares.map(row => row[col]).every(x => x);
+            if (wonCol) {break;}
         }
+
         /* Check for diagonals */
         let takenInDiagonal = true, takenInBckwrdsDiagonal = true;
         let colsMaxIndex = player.takenSquares[0].length - 1;
@@ -83,8 +96,7 @@ const displayController = function(nodesBoard, players) {
             takenInBckwrdsDiagonal &&= player.takenSquares[row][colsMaxIndex - row];
             takenInDiagonal &&= player.takenSquares[row][row];x => x
         }
-        isWinner = takenInBckwrdsDiagonal || takenInDiagonal;
-        if (isWinner) {player.makeWinner(); return null;}
+        return wonRow || wonCol || takenInBckwrdsDiagonal || takenInDiagonal;
     };
 
     const _startGame = function() {
@@ -93,18 +105,18 @@ const displayController = function(nodesBoard, players) {
             this.classList.toggle("pa");
             const [row, col] = _determinePosition(this);
             players[0].takeSquare(row, col);
-            _checkIfWon(players[0]);
             _switchPlayer();
             _removeEvent.call(this);
+            _declareWinner(players[0]);
         }
         else {
             this.textContent = players[1].getSymbol();
             this.classList.toggle("pb");
             const [row, col] = _determinePosition(this);
             players[1].takeSquare(row, col);
-            _checkIfWon(players[1]);
             _switchPlayer();
             _removeEvent.call(this);
+            _declareWinner(players[1]);
         }
     };
 
