@@ -32,7 +32,13 @@ const player = function(symbol) {
         return symbol
     };
 
-    return {getSymbol};
+    const takeSquare = function(i, j) {
+        takenSquares[i][j] = true;
+    };
+    
+    const takenSquares = populateArray(createEmptyArray(3, 3), () => false);
+
+    return {getSymbol, takeSquare, takenSquares};
 };
 
 players = [player("X"), player("O")];
@@ -40,7 +46,11 @@ players = [player("X"), player("O")];
 const displayController = function(nodesBoard, players) {
     let _playerAsTurn = true;
 
-    const playerArrays = {"pa": createEmptyArray(3, 3), "pb": createEmptyArray(3, 3)};
+    const _determinePosition = function(element) {
+        const row = element.getAttribute("row").substring(1);
+        const col = element.getAttribute("col").substring(1);
+        return [row, col]
+    };
 
     const _switchPlayer = function() {
         _playerAsTurn = _playerAsTurn ? false : true;
@@ -51,16 +61,20 @@ const displayController = function(nodesBoard, players) {
 
     };
 
-    const _startFlow = function() {
+    const _startGame = function() {
         if (_playerAsTurn) {
             this.textContent = players[0].getSymbol();
             this.classList.toggle("pa");
+            const [row, col] = _determinePosition(this);
+            players[0].takeSquare(row, col);
             _switchPlayer();
             _removeEvent.call(this);
         }
         else {
             this.textContent = players[1].getSymbol();
             this.classList.toggle("pb");
+            const [row, col] = _determinePosition(this);
+            players[1].takeSquare(row, col);
             _switchPlayer();
             _removeEvent.call(this);
         }
@@ -72,7 +86,7 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _onClick = function() {
-        _startFlow.call(this);
+        _startGame.call(this);
         //console.log(`You clicked ${this.getAttribute("position")}`);
     };
 
