@@ -55,15 +55,21 @@ const player = function(name, symbol) {
     return {getName, getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
 };
 
-players = [player(1, "X"), player(2, "O")];
+players = [player("Player 1", "X"), player("Player 2", "O")];
 
 const displayController = function(nodesBoard, players) {
     let _playerAsTurn = true;
 
+    const isAvailable = populateArray(createEmptyArray(3, 3), () => true);
+
     const _determinePosition = function(element) {
         const row = element.getAttribute("row").substring(1);
         const col = element.getAttribute("col").substring(1);
-        return [row, col]
+        return [row, col];
+    };
+
+    const _makeUnavailable = function(i, j) {
+        isAvailable[i][j] = false;
     };
 
     const _switchPlayer = function() {
@@ -74,7 +80,17 @@ const displayController = function(nodesBoard, players) {
         const isWinner = _checkIfWon(player);
         if (isWinner) {
             player.makeWinner()
-            alert(`Player ${player.getName()} has won!`);
+            const announcementBox = document.getElementById("announcement-box");
+            const screen = document.getElementById("screen");
+            const pName = document.createElement("p");
+            pName.classList.add("player-name")
+            const pMessage = document.createElement("p");
+            pName.textContent = player.getName();
+            pMessage.textContent = "has won!";
+            announcementBox.appendChild(pName);
+            announcementBox.appendChild(pMessage);
+            announcementBox.classList.toggle("on");
+            screen.classList.toggle("on");
         }
     };
 
@@ -104,6 +120,7 @@ const displayController = function(nodesBoard, players) {
             this.textContent = players[0].getSymbol();
             this.classList.toggle("pa");
             const [row, col] = _determinePosition(this);
+            _makeUnavailable(row, col);
             players[0].takeSquare(row, col);
             _switchPlayer();
             _removeEvent.call(this);
@@ -113,6 +130,7 @@ const displayController = function(nodesBoard, players) {
             this.textContent = players[1].getSymbol();
             this.classList.toggle("pb");
             const [row, col] = _determinePosition(this);
+            _makeUnavailable(row, col);
             players[1].takeSquare(row, col);
             _switchPlayer();
             _removeEvent.call(this);
@@ -139,6 +157,8 @@ const displayController = function(nodesBoard, players) {
     };
 
     _addEvents();
+
+    return {isAvailable};
 
 }(Gameboard.nodesBoard, players);
 
