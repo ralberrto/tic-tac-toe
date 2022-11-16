@@ -82,13 +82,10 @@ const displayController = function(nodesBoard, players) {
             player.makeWinner()
             const announcementBox = document.getElementById("announcement-box");
             const screen = document.getElementById("screen");
-            const pName = document.createElement("p");
-            pName.classList.add("player-name")
-            const pMessage = document.createElement("p");
+            const pName = document.querySelector("#announcement-box .player-name");
+            const pMessage = document.getElementById("message");
             pName.textContent = player.getName();
             pMessage.textContent = "has won!";
-            announcementBox.appendChild(pName);
-            announcementBox.appendChild(pMessage);
             announcementBox.classList.toggle("on");
             screen.classList.toggle("on");
         }

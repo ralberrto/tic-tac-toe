@@ -81,6 +81,7 @@ body {
 #announcement-box p {
     color: #fafafa;
     font-size: 2rem;
+    justify-self: center;
 }
 
 #announcement-box p.player-name {
@@ -90,8 +91,25 @@ body {
 }
 
 #announcement-box.on {
+    /*
     display: flex;
     flex-direction: column;
+    */
+    display: grid;
+    grid-template-rows: 1fr 1fr 2fr;
     padding: 1.5rem;
     align-items: center;
+    justify-content: space-around;
+}
+
+#announcement-box button {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+#announcement-box button p {
+    color: #18181b;
+    margin: 0;
+    margin-left: 1rem;
 }
