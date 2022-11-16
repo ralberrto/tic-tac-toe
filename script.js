@@ -58,7 +58,17 @@ const player = function(name, symbol) {
 players = [player("Player 1", "X"), player("Player 2", "O")];
 
 const displayController = function(nodesBoard, players) {
-    let _playerAsTurn = true;
+    let _isPlayerTurn = true;
+    const announcementBox = document.getElementById("announcement-box");
+    const screen = document.getElementById("screen");
+    const closeAnnouncementBoxButton = document.querySelector("#announcement-box #close");
+
+    const _closeAnnouncementBox = function() {
+        announcementBox.classList.toggle("on");
+        screen.classList.toggle("on");
+    };
+
+    closeAnnouncementBoxButton.addEventListener("click", _closeAnnouncementBox);
 
     const isAvailable = populateArray(createEmptyArray(3, 3), () => true);
 
@@ -73,15 +83,13 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _switchPlayer = function() {
-        _playerAsTurn = _playerAsTurn ? false : true;
+        _isPlayerTurn = _isPlayerTurn ? false : true;
     };
 
     const _declareWinner = function(player) {
         const isWinner = _checkIfWon(player);
         if (isWinner) {
             player.makeWinner()
-            const announcementBox = document.getElementById("announcement-box");
-            const screen = document.getElementById("screen");
             const pName = document.querySelector("#announcement-box .player-name");
             const pMessage = document.getElementById("message");
             pName.textContent = player.getName();
@@ -113,7 +121,7 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _startGame = function() {
-        if (_playerAsTurn) {
+        if (_isPlayerTurn) {
             this.textContent = players[0].getSymbol();
             this.classList.toggle("pa");
             const [row, col] = _determinePosition(this);

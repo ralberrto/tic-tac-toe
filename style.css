@@ -122,3 +122,13 @@ body {
     font-size: 1.5rem;
     flex: 1;
 }
+
+#announcement-box #close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+}
