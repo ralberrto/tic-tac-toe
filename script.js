@@ -55,13 +55,13 @@ const player = function(name, symbol) {
     return {getName, getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
 };
 
-players = [player("Player 1", "X"), player("Player 2", "O")];
+players = [player("Jugador 1", "X"), player("Jugador 2", "O")];
 
 const displayController = function(nodesBoard, players) {
     let _isPlayerTurn = true;
-    const announcementBox = document.getElementById("announcement-box");
+    const modalBox = document.getElementById("modal-box");
     const screen = document.getElementById("screen");
-    const closeAnnouncementBoxButton = document.querySelector("#announcement-box #close");
+    const closeModalButton = document.querySelector("#modal-box #close");
 
     const _applyToGrid = function(functionToApply) {
         for (row in nodesBoard) {
@@ -73,16 +73,16 @@ const displayController = function(nodesBoard, players) {
 
     const _disableElement = function(element) {
             element.removeEventListener("click", _onClick);
-            element.classList.add("unactivable");
+            element.classList.add("disabled");
     };
 
-    const _closeAnnouncementBox = function() {
-        announcementBox.classList.toggle("on");
+    const _closeModal = function() {
+        modalBox.classList.toggle("on");
         screen.classList.toggle("on");
         _applyToGrid(_disableElement);
     };
 
-    closeAnnouncementBoxButton.addEventListener("click", _closeAnnouncementBox);
+    closeModalButton.addEventListener("click", _closeModal);
 
     const isAvailable = populateArray(createEmptyArray(3, 3), () => true);
 
@@ -104,11 +104,11 @@ const displayController = function(nodesBoard, players) {
         const isWinner = _checkIfWon(player);
         if (isWinner) {
             player.makeWinner()
-            const pName = document.querySelector("#announcement-box .player-name");
+            const pName = document.querySelector("#modal-box .player-name");
             const pMessage = document.getElementById("message");
             pName.textContent = player.getName();
-            pMessage.textContent = "has won!";
-            announcementBox.classList.toggle("on");
+            pMessage.textContent = "ha ganado!";
+            modalBox.classList.toggle("on");
             screen.classList.toggle("on");
         }
     };

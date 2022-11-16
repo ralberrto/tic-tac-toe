@@ -9,6 +9,7 @@
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: 'Courier New', Courier, monospace;
@@ -37,7 +38,7 @@ body {
     font-size: 5rem;
 }
 
-#board-container div:active:not(.unactivable) {
+#board-container div:active:not(.disabled) {
     background-color: #f87171;
 }
 
@@ -65,7 +66,7 @@ body {
     display: block;
 }
 
-#announcement-box {
+#modal-box {
     display: none;
     position: fixed;
     top: 50%;
@@ -78,19 +79,19 @@ body {
     box-shadow: -10px -5px 5px black;
 }
 
-#announcement-box p {
+#modal-box > p {
     color: #fafafa;
     font-size: 2rem;
     justify-self: center;
 }
 
-#announcement-box p.player-name {
+#modal-box p.player-name {
     font-size: 2.5rem;
     white-space: nowrap;
     margin-bottom: 0;
 }
 
-#announcement-box.on {
+#modal-box.on {
     /*
     display: flex;
     flex-direction: column;
@@ -102,7 +103,7 @@ body {
     justify-content: space-around;
 }
 
-#announcement-box button {
+button {
     display: flex;
     align-items: center;
     padding: 1rem;
@@ -111,19 +112,20 @@ body {
     border: 1px solid #e4e4e7;
 }
 
-#announcement-box button:active {
+button:active {
     box-shadow: inset 1px 1px 2px black;
     border: 1px solid #e4e4e7;
 }
 
-#announcement-box button p {
+button p {
     color: #18181b;
     margin: 0;
     font-size: 1.5rem;
     flex: 1;
+    margin-left: 1rem;
 }
 
-#announcement-box #close {
+#modal-box #close {
     position: absolute;
     top: 0;
     right: 0;
