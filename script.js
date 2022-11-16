@@ -162,15 +162,11 @@ const displayController = function(nodesBoard, players) {
         //console.log(`You clicked ${this.getAttribute("position")}`);
     };
 
-    const _addEvents = function() {
-        for (i in nodesBoard) {
-            for (j in nodesBoard[i]) {
-                nodesBoard[i][j].addEventListener("click", _onClick);
-            }
-        }
+    const _addEvents = function(element) {
+        element.addEventListener("click", _onClick);
     };
 
-    _addEvents();
+    _applyToGrid(_addEvents);
 
     return {isAvailable};
 
