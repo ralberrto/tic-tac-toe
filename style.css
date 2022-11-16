@@ -19,6 +19,9 @@ body {
     width: 100vw;
 }
 
+header {
+}
+
 #board-container {
     --board-dimension: min(90vh, 90vw);
     display: grid;
@@ -133,4 +136,15 @@ button p {
     border-radius: 50%;
     background-color: transparent;
     border: none;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }

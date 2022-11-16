@@ -168,6 +168,11 @@ const displayController = function(nodesBoard, players) {
 
     _applyToGrid(_addEvents);
 
+    /* Styling aid */
+    const footer = document.querySelector("footer");
+    const footerHeight = footer.offsetHeight;
+    boardContainer.style.marginBottom = `calc(${footerHeight}px + min(5vh, 5vw))`;
+
     return {isAvailable};
 
 }(Gameboard.nodesBoard, players);
