@@ -63,9 +63,23 @@ const displayController = function(nodesBoard, players) {
     const screen = document.getElementById("screen");
     const closeAnnouncementBoxButton = document.querySelector("#announcement-box #close");
 
+    const _applyToGrid = function(functionToApply) {
+        for (row in nodesBoard) {
+            for (col in nodesBoard[row]) {
+                functionToApply(nodesBoard[row][col]);
+            }
+        }
+    };
+
+    const _disableElement = function(element) {
+            element.removeEventListener("click", _onClick);
+            element.classList.add("unactivable");
+    };
+
     const _closeAnnouncementBox = function() {
         announcementBox.classList.toggle("on");
         screen.classList.toggle("on");
+        _applyToGrid(_disableElement);
     };
 
     closeAnnouncementBoxButton.addEventListener("click", _closeAnnouncementBox);
@@ -128,7 +142,7 @@ const displayController = function(nodesBoard, players) {
             _makeUnavailable(row, col);
             players[0].takeSquare(row, col);
             _switchPlayer();
-            _removeEvent.call(this);
+            _disableElement(this);
             _declareWinner(players[0]);
         }
         else {
@@ -138,14 +152,9 @@ const displayController = function(nodesBoard, players) {
             _makeUnavailable(row, col);
             players[1].takeSquare(row, col);
             _switchPlayer();
-            _removeEvent.call(this);
+            _disableElement(this);
             _declareWinner(players[1]);
         }
-    };
-
-    const _removeEvent = function() {
-            this.removeEventListener("click", _onClick);
-            this.classList.toggle("unactivable");
     };
 
     const _onClick = function() {
