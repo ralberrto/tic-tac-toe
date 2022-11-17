@@ -151,7 +151,7 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _declareWinner = function(player) {
-        const isWinner = _checkIfWon(player);
+        const isWinner = _checkIfAligned(player.takenSquares);
         if (isWinner) {
             player.makeWinner(true)
             const pName = document.querySelector("#modal-box .player-name");
@@ -161,10 +161,23 @@ const displayController = function(nodesBoard, players) {
             modalBox.classList.toggle("on");
             screen.classList.toggle("on");
         }
+        else if (!_checkIfCanWin(player)) {
+            const player2 = players[Number(!Boolean(players.indexOf(player)))];
+            if (!_checkIfCanWin(player2)) {
+                const pName = document.querySelector("#modal-box .player-name");
+                const pMessage = document.getElementById("message");
+                pName.textContent = "¡Es un";
+                pMessage.textContent = "empate!";
+                modalBox.classList.toggle("on");
+                screen.classList.toggle("on");
+            }
+        }
     };
 
     const _checkIfCanWin = function(player) {
-        player.takenSquares.compareToMatrix()
+        canTakeMatrix = player.takenSquares.compareToMatrix(isAvailable, (a, b) => a || b);
+        const isAligned = _checkIfAligned(canTakeMatrix);
+        return isAligned;
     };
 
     const _checkEveryInRow = function(matrixToCheck) {
@@ -191,11 +204,11 @@ const displayController = function(nodesBoard, players) {
         return takenInBckwrdsDiagonal || takenInDiagonal;
     };
 
-    const _checkIfWon = function(player) {
-        let wonRow = _checkEveryInRow(player.takenSquares);
-        let wonCol = _checkEveryInColumn(player.takenSquares);
-        let wonDiag = _checkEveryInDiagonals(player.takenSquares);
-        return wonRow || wonCol || wonDiag;
+    const _checkIfAligned = function(matrixToCheck) {
+        let alignedRow = _checkEveryInRow(matrixToCheck);
+        let alignedCol = _checkEveryInColumn(matrixToCheck);
+        let alignedDiag = _checkEveryInDiagonals(matrixToCheck);
+        return alignedRow || alignedCol || alignedDiag;
     };
 
     const _playTurn = function(player) {
