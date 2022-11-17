@@ -12,13 +12,13 @@ const matrix = function(rows, cols, functionToPopulate) {
         return array2d;
     }(rows, cols);
 
-    const _populateMatrix = function() {
+    const populateMatrix = function(functionToPopulate) {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++)  {
                 values[i][j] = functionToPopulate(i, j);
             }
         }
-    }();
+    };
 
     const mapArray = function(functionToApply) {
         for (let i = 0; i < rows; i++) {
@@ -40,7 +40,10 @@ const matrix = function(rows, cols, functionToPopulate) {
         }
         return comparedMatrix;
     };
-    return {rows, cols, values, mapArray, compareToMatrix};
+
+    populateMatrix(functionToPopulate);
+
+    return {rows, cols, values, populateMatrix, mapArray, compareToMatrix};
 };
 
 const Gameboard = (function(boardContainer) {
@@ -79,8 +82,8 @@ const player = function(name, symbol) {
         takenSquares.values[i][j] = true;
     };
     
-    const makeWinner = function() {
-        won = true;
+    const makeWinner = function(make) {
+        won = make;
     };
 
     const isWinner = function() {
@@ -97,6 +100,27 @@ const displayController = function(nodesBoard, players) {
     const modalBox = document.getElementById("modal-box");
     const screen = document.getElementById("screen");
     const closeModalButton = document.querySelector("#modal-box #close");
+    const reloadButtons = Array.from(document.querySelectorAll("button.reload"));
+
+    const isAvailable = matrix(3, 3, () => true);
+
+    const _clearBoard = function() {
+        _closeModal();
+        nodesBoard.mapArray((element) => {
+            element.textContent = "";
+            element.classList.remove("pa");
+            element.classList.remove("pb");
+            element.classList.remove("disabled");
+            _addEvents(element);
+        });
+        players.forEach(player => {
+            player.makeWinner(false);
+            player.takenSquares.populateMatrix(() => false);
+        });
+        isAvailable.populateMatrix(() => true);
+    };
+
+    reloadButtons.forEach(button => button.addEventListener("click", _clearBoard));
 
     const _disableElement = function(element) {
             element.removeEventListener("click", _onClick);
@@ -104,14 +128,13 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _closeModal = function() {
-        modalBox.classList.toggle("on");
-        screen.classList.toggle("on");
+        modalBox.classList.remove("on");
+        screen.classList.remove("on");
         nodesBoard.mapArray(_disableElement);
     };
 
     closeModalButton.addEventListener("click", _closeModal);
 
-    const isAvailable = matrix(3, 3, () => true);
 
     const _determinePosition = function(element) {
         const row = element.getAttribute("row").substring(1);
@@ -130,7 +153,7 @@ const displayController = function(nodesBoard, players) {
     const _declareWinner = function(player) {
         const isWinner = _checkIfWon(player);
         if (isWinner) {
-            player.makeWinner()
+            player.makeWinner(true)
             const pName = document.querySelector("#modal-box .player-name");
             const pMessage = document.getElementById("message");
             pName.textContent = player.getName();
