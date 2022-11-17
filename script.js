@@ -1,6 +1,39 @@
 
 boardContainer = document.getElementById("board-container");
 
+const matrix = function(rows, cols, functionToPopulate) {
+    const values = function (rows, columns) {
+        //let row = Array.apply(null, Array(columns));
+        //let row =  [...Array(3)];
+        array2d = [...Array(rows)];
+        for (let i in array2d) {
+            array2d[i] = [...Array(columns)];
+        }
+        return array2d;
+    }(rows, cols);
+
+    const _populateMatrix = function() {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                values[i][j] = functionToPopulate(i, j);
+            }
+        }
+    }();
+
+    const mapArray = function(functionToApply) {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j <cols; j++) {
+                functionToApply(values[i][j]);
+            }
+        }
+    };
+
+    const compareToMatrix = function(matrix, comparison) {
+        console.log("Hello, world");
+    };
+    return {rows, cols, values, mapArray, compareToMatrix};
+};
+
 const Gameboard = (function(boardContainer) {
 
     const _createBoardCell = function(x, y) {
@@ -10,25 +43,18 @@ const Gameboard = (function(boardContainer) {
         return divElement;
     };
 
-    const _renderBoard = function(containerElement, nodesBoard) {
-        for (let i in nodesBoard) {
-            for (let j in nodesBoard[i]) {
-                containerElement.appendChild(nodesBoard[i][j]);
-            }
-        }
+    const _renderBoard = function(element) {
+        boardContainer.appendChild(element);
     };
 
-    const emptyArray = createEmptyArray(3, 3);
-
-    const nodesBoard = populateArray(emptyArray, _createBoardCell);
-
-    _renderBoard(boardContainer, nodesBoard);
+    const nodesBoard = matrix(3, 3, _createBoardCell);
+    nodesBoard.mapArray(_renderBoard);
 
     return {nodesBoard};
 })(boardContainer);
 
 const player = function(name, symbol) {
-    const takenSquares = populateArray(createEmptyArray(3, 3), () => false);
+    const takenSquares = matrix(3, 3, () => false);
 
     let won = false;
 
@@ -41,7 +67,7 @@ const player = function(name, symbol) {
     };
 
     const takeSquare = function(i, j) {
-        takenSquares[i][j] = true;
+        takenSquares.values[i][j] = true;
     };
     
     const makeWinner = function() {
@@ -63,14 +89,6 @@ const displayController = function(nodesBoard, players) {
     const screen = document.getElementById("screen");
     const closeModalButton = document.querySelector("#modal-box #close");
 
-    const _applyToGrid = function(functionToApply) {
-        for (row in nodesBoard) {
-            for (col in nodesBoard[row]) {
-                functionToApply(nodesBoard[row][col]);
-            }
-        }
-    };
-
     const _disableElement = function(element) {
             element.removeEventListener("click", _onClick);
             element.classList.add("disabled");
@@ -79,12 +97,12 @@ const displayController = function(nodesBoard, players) {
     const _closeModal = function() {
         modalBox.classList.toggle("on");
         screen.classList.toggle("on");
-        _applyToGrid(_disableElement);
+        nodesBoard.mapArray(_disableElement);
     };
 
     closeModalButton.addEventListener("click", _closeModal);
 
-    const isAvailable = populateArray(createEmptyArray(3, 3), () => true);
+    const isAvailable = matrix(3, 3, () => true);
 
     const _determinePosition = function(element) {
         const row = element.getAttribute("row").substring(1);
@@ -93,7 +111,7 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _makeUnavailable = function(i, j) {
-        isAvailable[i][j] = false;
+        isAvailable.values[i][j] = false;
     };
 
     const _switchPlayer = function() {
@@ -113,23 +131,27 @@ const displayController = function(nodesBoard, players) {
         }
     };
 
+    const _checkIfCanWin = function(player) {
+    };
+
     const _checkIfWon = function(player) {
         /* Check for rows */
-        let wonRow = player.takenSquares.some((row) => row.every((x) => x));
+        const takenByPlayer = player.takenSquares.values;
+        let wonRow = takenByPlayer.some((row) => row.every((x) => x));
 
         /* Check for columns */
         let wonCol;
-        for (let col in player.takenSquares[0]) {
-            wonCol = player.takenSquares.map(row => row[col]).every(x => x);
+        for (let col in takenByPlayer[0]) {
+            wonCol = takenByPlayer.map(row => row[col]).every(x => x);
             if (wonCol) {break;}
         }
 
         /* Check for diagonals */
         let takenInDiagonal = true, takenInBckwrdsDiagonal = true;
-        let colsMaxIndex = player.takenSquares[0].length - 1;
-        for (let row in player.takenSquares) {
-            takenInBckwrdsDiagonal &&= player.takenSquares[row][colsMaxIndex - row];
-            takenInDiagonal &&= player.takenSquares[row][row];
+        let colsMaxIndex = takenByPlayer[0].length - 1;
+        for (let row in takenByPlayer) {
+            takenInBckwrdsDiagonal &&= takenByPlayer[row][colsMaxIndex - row];
+            takenInDiagonal &&= takenByPlayer[row][row];
         }
         return wonRow || wonCol || takenInBckwrdsDiagonal || takenInDiagonal;
     };
@@ -166,7 +188,7 @@ const displayController = function(nodesBoard, players) {
         element.addEventListener("click", _onClick);
     };
 
-    _applyToGrid(_addEvents);
+    nodesBoard.mapArray(_addEvents);
 
     /* Styling aid */
     const footer = document.querySelector("footer");
@@ -176,23 +198,3 @@ const displayController = function(nodesBoard, players) {
     return {isAvailable};
 
 }(Gameboard.nodesBoard, players);
-
-/* Globally defined functions */
-function createEmptyArray(rows, columns) {
-    //let row = Array.apply(null, Array(columns));
-    //let row =  [...Array(3)];
-    array2d = [...Array(rows)];
-    for (let i in array2d) {
-        array2d[i] = [...Array(columns)];
-    }
-    return array2d;
-};
-
-function populateArray(emptyArray, genFunction) {
-    for (let i in emptyArray) {
-        for (let j in emptyArray[i]) {
-            emptyArray[i][j] = genFunction(i, j);
-        }
-    }
-    return emptyArray;
-};
