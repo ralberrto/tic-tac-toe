@@ -14,7 +14,7 @@ const matrix = function(rows, cols, functionToPopulate) {
 
     const _populateMatrix = function() {
         for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
+            for (let j = 0; j < cols; j++)  {
                 values[i][j] = functionToPopulate(i, j);
             }
         }
@@ -28,8 +28,17 @@ const matrix = function(rows, cols, functionToPopulate) {
         }
     };
 
-    const compareToMatrix = function(matrix, comparison) {
-        console.log("Hello, world");
+    const compareToMatrix = function(comparisonMatrix, comparison) {
+        if (!(this.rows === comparisonMatrix.rows) || !(this.cols === comparisonMatrix.cols)) {
+            throw "Matrices should have equals dimensions."
+        }
+        const comparedMatrix = matrix(this.rows, this.cols, () => undefined);
+        for (i = 0; i < this.rows; i++) {
+            for (j = 0; j < this.cols; j++) {
+                comparedMatrix.values[i][j] = comparison(this.values[i][j], comparisonMatrix.values[i][j]);
+            }
+        }
+        return comparedMatrix;
     };
     return {rows, cols, values, mapArray, compareToMatrix};
 };
