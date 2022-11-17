@@ -20,7 +20,7 @@ const matrix = function(rows, cols, functionToPopulate) {
         }
     };
 
-    const mapArray = function(functionToApply) {
+    const mapMatrix = function(functionToApply) {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j <cols; j++) {
                 functionToApply(values[i][j]);
@@ -43,7 +43,7 @@ const matrix = function(rows, cols, functionToPopulate) {
 
     populateMatrix(functionToPopulate);
 
-    return {rows, cols, values, populateMatrix, mapArray, compareToMatrix};
+    return {rows, cols, values, populateMatrix, mapMatrix, compareToMatrix};
 };
 
 const Gameboard = (function(boardContainer) {
@@ -60,7 +60,7 @@ const Gameboard = (function(boardContainer) {
     };
 
     const nodesBoard = matrix(3, 3, _createBoardCell);
-    nodesBoard.mapArray(_renderBoard);
+    nodesBoard.mapMatrix(_renderBoard);
 
     return {nodesBoard};
 })(boardContainer);
@@ -106,7 +106,7 @@ const displayController = function(nodesBoard, players) {
 
     const _clearBoard = function() {
         _closeModal();
-        nodesBoard.mapArray((element) => {
+        nodesBoard.mapMatrix((element) => {
             element.textContent = "";
             element.classList.remove("pa");
             element.classList.remove("pb");
@@ -130,7 +130,7 @@ const displayController = function(nodesBoard, players) {
     const _closeModal = function() {
         modalBox.classList.remove("on");
         screen.classList.remove("on");
-        nodesBoard.mapArray(_disableElement);
+        nodesBoard.mapMatrix(_disableElement);
     };
 
     closeModalButton.addEventListener("click", _closeModal);
@@ -156,7 +156,7 @@ const displayController = function(nodesBoard, players) {
             player.makeWinner(true)
             const pName = document.querySelector("#modal-box .player-name");
             const pMessage = document.getElementById("message");
-            pName.textContent = player.getName();
+            pName.textContent = "¡" + player.getName();
             pMessage.textContent = "ha ganado!";
             modalBox.classList.toggle("on");
             screen.classList.toggle("on");
@@ -164,28 +164,38 @@ const displayController = function(nodesBoard, players) {
     };
 
     const _checkIfCanWin = function(player) {
+        player.takenSquares.compareToMatrix()
+    };
+
+    const _checkEveryInRow = function(matrixToCheck) {
+        let everyInRow = matrixToCheck.values.some(row => row.every(x => x));
+        return everyInRow;
+    };
+
+    const _checkEveryInColumn = function(matrixToCheck) {
+        let everyInColumn;
+        for (let col = 0; col < matrixToCheck.cols; col++) {
+            everyInColumn = matrixToCheck.values.map(row => row[col]).every(x => x);
+            if (everyInColumn) {break;}
+        }
+        return everyInColumn;
+    };
+
+    const _checkEveryInDiagonals = function(matrixToCheck) {
+        let takenInDiagonal = true, takenInBckwrdsDiagonal = true;
+        let colsMaxIndex = matrixToCheck.cols - 1;
+        for (let row in matrixToCheck.values) {
+            takenInBckwrdsDiagonal &&= matrixToCheck.values[row][colsMaxIndex - row];
+            takenInDiagonal &&= matrixToCheck.values[row][row];
+        }
+        return takenInBckwrdsDiagonal || takenInDiagonal;
     };
 
     const _checkIfWon = function(player) {
-        /* Check for rows */
-        const takenByPlayer = player.takenSquares.values;
-        let wonRow = takenByPlayer.some((row) => row.every((x) => x));
-
-        /* Check for columns */
-        let wonCol;
-        for (let col in takenByPlayer[0]) {
-            wonCol = takenByPlayer.map(row => row[col]).every(x => x);
-            if (wonCol) {break;}
-        }
-
-        /* Check for diagonals */
-        let takenInDiagonal = true, takenInBckwrdsDiagonal = true;
-        let colsMaxIndex = takenByPlayer[0].length - 1;
-        for (let row in takenByPlayer) {
-            takenInBckwrdsDiagonal &&= takenByPlayer[row][colsMaxIndex - row];
-            takenInDiagonal &&= takenByPlayer[row][row];
-        }
-        return wonRow || wonCol || takenInBckwrdsDiagonal || takenInDiagonal;
+        let wonRow = _checkEveryInRow(player.takenSquares);
+        let wonCol = _checkEveryInColumn(player.takenSquares);
+        let wonDiag = _checkEveryInDiagonals(player.takenSquares);
+        return wonRow || wonCol || wonDiag;
     };
 
     const _playTurn = function(player) {
@@ -216,7 +226,7 @@ const displayController = function(nodesBoard, players) {
         element.addEventListener("click", _onClick);
     };
 
-    nodesBoard.mapArray(_addEvents);
+    nodesBoard.mapMatrix(_addEvents);
 
     /* Styling aid */
     const footer = document.querySelector("footer");
