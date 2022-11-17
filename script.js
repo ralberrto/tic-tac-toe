@@ -156,32 +156,28 @@ const displayController = function(nodesBoard, players) {
         return wonRow || wonCol || takenInBckwrdsDiagonal || takenInDiagonal;
     };
 
+    const _playTurn = function(player) {
+        this.textContent = player.getSymbol();
+        this.classList.toggle("pa");
+        const [row, col] = _determinePosition(this);
+        _makeUnavailable(row, col);
+        player.takeSquare(row, col);
+        _switchPlayer();
+        _disableElement(this);
+        _declareWinner(player);
+    };
+
     const _startGame = function() {
         if (_isPlayerTurn) {
-            this.textContent = players[0].getSymbol();
-            this.classList.toggle("pa");
-            const [row, col] = _determinePosition(this);
-            _makeUnavailable(row, col);
-            players[0].takeSquare(row, col);
-            _switchPlayer();
-            _disableElement(this);
-            _declareWinner(players[0]);
+            _playTurn.call(this, players[0]);
         }
         else {
-            this.textContent = players[1].getSymbol();
-            this.classList.toggle("pb");
-            const [row, col] = _determinePosition(this);
-            _makeUnavailable(row, col);
-            players[1].takeSquare(row, col);
-            _switchPlayer();
-            _disableElement(this);
-            _declareWinner(players[1]);
+            _playTurn.call(this, players[1]);
         }
     };
 
     const _onClick = function() {
         _startGame.call(this);
-        //console.log(`You clicked ${this.getAttribute("position")}`);
     };
 
     const _addEvents = function(element) {
