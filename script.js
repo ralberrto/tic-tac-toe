@@ -100,7 +100,7 @@ const displayController = function(nodesBoard, players) {
     const modalBox = document.getElementById("modal-box");
     const screen = document.getElementById("screen");
     const closeModalButton = document.querySelector("#modal-box #close");
-    const reloadButtons = Array.from(document.querySelectorAll("button.reload"));
+    const replayButtons = Array.from(document.querySelectorAll("button.replay"));
 
     const isAvailable = matrix(3, 3, () => true);
 
@@ -120,7 +120,7 @@ const displayController = function(nodesBoard, players) {
         isAvailable.populateMatrix(() => true);
     };
 
-    reloadButtons.forEach(button => button.addEventListener("click", _clearBoard));
+    replayButtons.forEach(button => button.addEventListener("click", _clearBoard));
 
     const _disableElement = function(element) {
             element.removeEventListener("click", _onClick);
