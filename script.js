@@ -108,8 +108,6 @@ const displayController = function(nodesBoard, players) {
         _closeModal();
         nodesBoard.mapMatrix((element) => {
             element.textContent = "";
-            element.classList.remove("pa");
-            element.classList.remove("pb");
             element.classList.remove("disabled");
             _addEvents(element);
         });
@@ -213,7 +211,6 @@ const displayController = function(nodesBoard, players) {
 
     const _playTurn = function(player) {
         this.textContent = player.getSymbol();
-        this.classList.toggle("pa");
         const [row, col] = _determinePosition(this);
         _makeUnavailable(row, col);
         player.takeSquare(row, col);
