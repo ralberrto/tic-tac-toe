@@ -222,17 +222,13 @@ const displayController = function(nodesBoard, players) {
         _declareWinner(player);
     };
 
-    const _startGame = function() {
+    const _onClick = function() {
         if (_isPlayerTurn) {
             _playTurn.call(this, players[0]);
         }
         else {
             _playTurn.call(this, players[1]);
         }
-    };
-
-    const _onClick = function() {
-        _startGame.call(this);
     };
 
     const _addEvents = function(element) {
