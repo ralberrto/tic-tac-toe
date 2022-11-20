@@ -1,4 +1,3 @@
-
 boardContainer = document.getElementById("board-container");
 
 const matrix = function(rows, cols, functionToPopulate) {
@@ -241,24 +240,14 @@ const displayController = function(nodesBoard, players) {
         screen.classList.toggle("on");
     };
 
-    const _playTurn = function(player) {
+    const _onClick = function() {
+        const player = flowController.getIsPlayerTurn() ? players[0] : players[1];
         flowController.catchSelection(this, player);
         this.textContent = player.getSymbol();
-        if (player.isWinner()) {
-            _declareWinner(player);
-        }
+        if (player.isWinner()) {_declareWinner(player);}
         else if (player.isLoser()){
             const player2 = players[Number(!Boolean(players.indexOf(player)))];
             if (player2.isLoser()) {_declareDraw();}
-        }
-    };
-
-    const _onClick = function() {
-        if (flowController.getIsPlayerTurn()) {
-            _playTurn.call(this, players[0]);
-        }
-        else {
-            _playTurn.call(this, players[1]);
         }
     };
 
