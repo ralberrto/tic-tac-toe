@@ -8,13 +8,16 @@
 }
 
 body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #27272a;
+    margin: 0;
+}
+
+#game-cont {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Courier New', Courier, monospace;
-    background-color: #27272a;
-    margin: 0;
     height: 100vh;
     width: 100vw;
 }
@@ -23,11 +26,12 @@ header {
 }
 
 #board-container {
-    --board-dimension: min(90vh, 90vw);
+    --board-dimension: min(80vh, 80vw);
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     width: var(--board-dimension);
     height: var(--board-dimension);
+    aspect-ratio: 1 / 1;
     margin: min(5vw, 5vh);
     background-color: #fafafa;
     padding: 1rem;
