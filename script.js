@@ -69,6 +69,13 @@ const player = function(name, symbol) {
     const takenSquares = matrix(3, 3, () => false);
 
     let won = false;
+    let lost = false;
+
+    const resetPlayer = function() {
+        won = false;
+        lost = false;
+        takenSquares.populateMatrix(() => false);
+    };
 
     const getName = function() {
         return name;
@@ -82,57 +89,31 @@ const player = function(name, symbol) {
         takenSquares.values[i][j] = true;
     };
     
-    const makeWinner = function(make) {
-        won = make;
+    const makeWinner = function() {
+        won = true;
     };
 
     const isWinner = function() {
         return won;
     };
 
-    return {getName, getSymbol, takeSquare, takenSquares, isWinner, makeWinner};
+    const makeLoser = function() {
+        lost = true;
+    };
+
+    const isLoser = function() {
+        return lost;
+    };
+
+    return {getName, getSymbol, takeSquare, takenSquares,
+        makeWinner, isWinner, makeLoser, isLoser, resetPlayer};
 };
 
 players = [player("Jugador 1", "X"), player("Jugador 2", "O")];
 
-const displayController = function(nodesBoard, players) {
-    let _isPlayerTurn = true;
-    const modalBox = document.getElementById("modal-box");
-    const screen = document.getElementById("screen");
-    const closeModalButton = document.querySelector("#modal-box #close");
-    const replayButtons = Array.from(document.querySelectorAll("button.replay"));
-
+const flowController = function() {
     const isAvailable = matrix(3, 3, () => true);
-
-    const _clearBoard = function() {
-        _closeModal();
-        nodesBoard.mapMatrix((element) => {
-            element.textContent = "";
-            element.classList.remove("disabled");
-            _addEvents(element);
-        });
-        players.forEach(player => {
-            player.makeWinner(false);
-            player.takenSquares.populateMatrix(() => false);
-        });
-        isAvailable.populateMatrix(() => true);
-    };
-
-    replayButtons.forEach(button => button.addEventListener("click", _clearBoard));
-
-    const _disableElement = function(element) {
-            element.removeEventListener("click", _onClick);
-            element.classList.add("disabled");
-    };
-
-    const _closeModal = function() {
-        modalBox.classList.remove("on");
-        screen.classList.remove("on");
-        nodesBoard.mapMatrix(_disableElement);
-    };
-
-    closeModalButton.addEventListener("click", _closeModal);
-
+    let _isPlayerTurn = true;
 
     const _determinePosition = function(element) {
         const row = element.getAttribute("row").substring(1);
@@ -148,34 +129,22 @@ const displayController = function(nodesBoard, players) {
         _isPlayerTurn = _isPlayerTurn ? false : true;
     };
 
-    const _declareWinner = function(player) {
+    const _checkIfWon = function(player) {
         const isWinner = _checkIfAligned(player.takenSquares);
-        if (isWinner) {
-            player.makeWinner(true)
-            const pName = document.querySelector("#modal-box .player-name");
-            const pMessage = document.getElementById("message");
-            pName.textContent = "¡" + player.getName();
-            pMessage.textContent = "ha ganado!";
-            modalBox.classList.toggle("on");
-            screen.classList.toggle("on");
-        }
-        else if (!_checkIfCanWin(player)) {
-            const player2 = players[Number(!Boolean(players.indexOf(player)))];
-            if (!_checkIfCanWin(player2)) {
-                const pName = document.querySelector("#modal-box .player-name");
-                const pMessage = document.getElementById("message");
-                pName.textContent = "¡Es un";
-                pMessage.textContent = "empate!";
-                modalBox.classList.toggle("on");
-                screen.classList.toggle("on");
-            }
-        }
+        if (isWinner) {player.makeWinner()}
+    };
+
+    const _checkIfAligned = function(matrixToCheck) {
+        let alignedRow = _checkEveryInRow(matrixToCheck);
+        let alignedCol = _checkEveryInColumn(matrixToCheck);
+        let alignedDiag = _checkEveryInDiagonals(matrixToCheck);
+        return alignedRow || alignedCol || alignedDiag;
     };
 
     const _checkIfCanWin = function(player) {
         canTakeMatrix = player.takenSquares.compareToMatrix(isAvailable, (a, b) => a || b);
-        const isAligned = _checkIfAligned(canTakeMatrix);
-        return isAligned;
+        const canWin = _checkIfAligned(canTakeMatrix);
+        if (!canWin) {player.makeLoser()}
     };
 
     const _checkEveryInRow = function(matrixToCheck) {
@@ -201,26 +170,91 @@ const displayController = function(nodesBoard, players) {
         }
         return takenInBckwrdsDiagonal || takenInDiagonal;
     };
+    
+    const getIsPlayerTurn = function() {
+        return _isPlayerTurn;
+    };
 
-    const _checkIfAligned = function(matrixToCheck) {
-        let alignedRow = _checkEveryInRow(matrixToCheck);
-        let alignedCol = _checkEveryInColumn(matrixToCheck);
-        let alignedDiag = _checkEveryInDiagonals(matrixToCheck);
-        return alignedRow || alignedCol || alignedDiag;
+    const catchSelection = function (element, player) {
+        const [row, col] = _determinePosition(element);
+        _makeUnavailable(row, col);
+        player.takeSquare(row, col);
+        displayController.disableElement(element);
+        _checkIfWon(player);
+        const player2 = players[Number(!Boolean(players.indexOf(player)))];
+        _checkIfCanWin(player);
+        _checkIfCanWin(player2);
+        _switchPlayer();
+    };
+
+    return {catchSelection, isAvailable, getIsPlayerTurn};
+
+}();
+
+const displayController = function(nodesBoard, players) {
+    const modalBox = document.getElementById("modal-box");
+    const screen = document.getElementById("screen");
+    const closeModalButton = document.querySelector("#modal-box #close");
+    const replayButtons = Array.from(document.querySelectorAll("button.replay"));
+
+    const _clearBoard = function() {
+        _closeModal();
+        nodesBoard.mapMatrix((element) => {
+            element.textContent = "";
+            element.classList.remove("disabled");
+            _addEvents(element);
+        });
+        players.forEach(player => player.resetPlayer());
+        flowController.isAvailable.populateMatrix(() => true);
+    };
+
+    replayButtons.forEach(button => button.addEventListener("click", _clearBoard));
+
+    const disableElement = function(element) {
+            element.removeEventListener("click", _onClick);
+            element.classList.add("disabled");
+    };
+
+    const _closeModal = function() {
+        modalBox.classList.remove("on");
+        screen.classList.remove("on");
+        nodesBoard.mapMatrix(disableElement);
+    };
+
+    closeModalButton.addEventListener("click", _closeModal);
+
+    const _declareWinner = function(player) {
+        const pName = document.querySelector("#modal-box .player-name");
+        const pMessage = document.getElementById("message");
+        pName.textContent = "¡" + player.getName();
+        pMessage.textContent = "ha ganado!";
+        modalBox.classList.toggle("on");
+        screen.classList.toggle("on");
+    };
+
+    const _declareDraw = function() {
+        const pName = document.querySelector("#modal-box .player-name");
+        const pMessage = document.getElementById("message");
+        pName.textContent = "¡Es un";
+        pMessage.textContent = "empate!";
+        modalBox.classList.toggle("on");
+        screen.classList.toggle("on");
     };
 
     const _playTurn = function(player) {
+        flowController.catchSelection(this, player);
         this.textContent = player.getSymbol();
-        const [row, col] = _determinePosition(this);
-        _makeUnavailable(row, col);
-        player.takeSquare(row, col);
-        _switchPlayer();
-        _disableElement(this);
-        _declareWinner(player);
+        if (player.isWinner()) {
+            _declareWinner(player);
+        }
+        else if (player.isLoser()){
+            const player2 = players[Number(!Boolean(players.indexOf(player)))];
+            if (player2.isLoser()) {_declareDraw();}
+        }
     };
 
     const _onClick = function() {
-        if (_isPlayerTurn) {
+        if (flowController.getIsPlayerTurn()) {
             _playTurn.call(this, players[0]);
         }
         else {
@@ -239,6 +273,6 @@ const displayController = function(nodesBoard, players) {
     const footerHeight = footer.offsetHeight;
     boardContainer.style.marginBottom = `calc(${footerHeight}px + min(5vh, 5vw))`;
 
-    return {isAvailable};
+    return {disableElement};
 
 }(Gameboard.nodesBoard, players);
