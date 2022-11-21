@@ -261,7 +261,12 @@ const displayController = function(nodesBoard, players) {
 
 }(Gameboard.nodesBoard, players);
 
-/* Styling aid */
-const footer = document.querySelector("footer");
-const footerHeight = footer.offsetHeight;
-boardContainer.style.marginBottom = `calc(${footerHeight}px + min(5vh, 5vw))`;
+///* Styling aid */
+//const footer = document.querySelector("footer");
+//const footerHeight = footer.offsetHeight;
+//boardContainer.style.marginBottom = `calc(${footerHeight}px + min(5vh, 5vw))`;
+//const gameCont = document.getElementById("game-cont");
+//const gameContWidth = gameCont.offsetWidth;
+//const gameContHeight = gameCont.offsetHeight;
+//boardContainer.style.width = boardContainer.style.height =
+//    `calc(min(${gameContHeight}px, ${gameContWidth}px) - ${footerHeight}px - 2*min(5vw, 5vh))`;
