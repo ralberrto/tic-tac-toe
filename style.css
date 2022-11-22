@@ -233,7 +233,7 @@ footer {
 
 @media (max-height: 400px) {
     #board-container div {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 
     button,
@@ -261,7 +261,7 @@ footer {
     }
 }
 
-@media (max-aspect-ratio: 1) {
+@media (orientation: portrait) {
     body {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
