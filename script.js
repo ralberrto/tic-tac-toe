@@ -108,7 +108,7 @@ const player = function(name, symbol) {
         makeWinner, isWinner, makeLoser, isLoser, resetPlayer};
 };
 
-players = [player("Jugador 1", "X"), player("Jugador 2", "O")];
+players = [player("Beto", "X"), player("Enrique", "O")];
 
 const flowController = function() {
     const isAvailable = matrix(3, 3, () => true);
@@ -195,6 +195,20 @@ const displayController = function(nodesBoard, players) {
     const screen = document.getElementById("screen");
     const closeModalButton = document.querySelector("#modal-box #close");
     const replayButtons = Array.from(document.querySelectorAll("button.replay"));
+    const playerContainers = Array.from(document.querySelectorAll(".player-cont"));
+
+    const _displayPlayerNames = function(container) {
+        const index = playerContainers.indexOf(container);
+        const pName = document.createElement("p");
+        const pSymbol = document.createElement("p");
+        pName.textContent = players[index].getName();
+        pSymbol.textContent = players[index].getSymbol();
+        pSymbol.classList.add("symbol");
+        container.appendChild(pName);
+        container.appendChild(pSymbol);
+    }
+
+    playerContainers.forEach(_displayPlayerNames);
 
     const _clearBoard = function() {
         _closeModal();
