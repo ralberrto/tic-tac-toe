@@ -211,3 +211,55 @@ footer {
         margin-bottom: 0.5rem;
     }
 }
+
+@media (max-aspect-ratio: 1) {
+    body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0;
+        height: 100vh;
+        align-content: center;
+    }
+
+    aside.bar {
+        width: auto;
+    }
+
+    aside.bar div p {
+        margin-top: 1rem;
+    }
+
+    .bar#lbar {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .bar#rbar {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+    }
+
+    #game-cont {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100%;
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
+    }
+
+    #board-container {
+        --footer-height: calc(3rem + 2.5rem);
+        --header-height: calc(1.5rem + 2rem + 2rem + 2rem);
+        --own-margin: 3rem;
+        width: min(calc(100vh - var(--footer-height) - var(--header-height) - var(--own-margin)),
+        calc(100% - 3rem));
+        aspect-ratio: 1 / 1;
+        background-color: #fafafa;
+        padding: 0.5rem;
+        margin: 1.5rem 1.5rem calc(var(--footer-height) + 1.5rem) 1.5rem;
+    }
+}
