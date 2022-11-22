@@ -21,10 +21,10 @@ aside.bar {
 aside .player-cont {
     position: relative;
     margin: 15vh 0.5rem 0.5rem 0.5rem;
-    padding-bottom: 0.5rem;
+    padding: 1rem;
 }
 
-aside .player-cont.active::after {
+aside .indicator {
     position: absolute;
     content: "";
     top: 0;
@@ -32,22 +32,50 @@ aside .player-cont.active::after {
     width: 100%;
     height: 100%;
     background-color: #d4d4d822;
-    border-radius: 30%;
+    border-radius: 2rem;
+    box-shadow: 3px 3px 1rem #18181b, -3px 3px 1rem #18181b;
+    z-index: -1;
+}
+
+aside .indicator.active {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d4d4d822;
+    border-radius: 2rem;
     box-shadow: 3px 3px 1rem #f4f4f5, -3px 3px 1rem #f4f4f5;
+    z-index: -1;
 }
 
 aside.bar div p {
-    font-size: 2rem;
-    color: #d4d4d8;
-    margin-bottom: 0.5rem;
     padding: 1rem;
-    text-align: center;
 }
 
 aside.bar div p.symbol {
+    font-size: 2rem;
+    color: #d4d4d8;
     font-family: Rubik-Bubbles;
-    margin: 0;
     padding: 0 1rem;
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+aside.bar input {
+    background-color: transparent;
+    font-size: 2rem;
+    color: #d4d4d8;
+    border: none;
+    outline: none;
+    text-align: center;
+    width: 100%
+}
+
+aside.bar input::placeholder {
+    color: #d4d4d8;
+    opacity: 1;
 }
 
 #game-cont {

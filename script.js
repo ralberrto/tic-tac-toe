@@ -196,12 +196,14 @@ const displayController = function(nodesBoard, players) {
     const closeModalButton = document.querySelector("#modal-box #close");
     const replayButtons = Array.from(document.querySelectorAll("button.replay"));
     const playerContainers = Array.from(document.querySelectorAll(".player-cont"));
+    const indicators = Array.from(document.querySelectorAll(".indicator"));
 
     const _displayPlayerNames = function(container) {
         const index = playerContainers.indexOf(container);
-        const pName = document.createElement("p");
+        const pName = document.createElement("input");
         const pSymbol = document.createElement("p");
-        pName.textContent = players[index].getName();
+        pName.setAttribute("type", "text");
+        pName.setAttribute("placeholder", players[index].getName());
         pSymbol.textContent = players[index].getSymbol();
         pSymbol.classList.add("symbol");
         container.appendChild(pName);
@@ -260,12 +262,12 @@ const displayController = function(nodesBoard, players) {
         const index = flowController.getIsPlayerTurn() ? 0 : 1;
         const index2 = Number(!Boolean(index));
         if (!none) {
-            playerContainers[index].classList.add("active");
-            playerContainers[index2].classList.remove("active");
+            indicators[index].classList.add("active");
+            indicators[index2].classList.remove("active");
         }
         else {
-            playerContainers[index].classList.remove("active");
-            playerContainers[index2].classList.remove("active");
+            indicators[index].classList.remove("active");
+            indicators[index2].classList.remove("active");
         }
     };
 
