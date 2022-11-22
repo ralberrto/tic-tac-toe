@@ -8,9 +8,20 @@
 }
 
 body {
+    display: flex;
     font-family: 'Courier New', Courier, monospace;
     background-color: #27272a;
     margin: 0;
+}
+
+aside.bar {
+    width: 20%;
+}
+
+aside.bar div {
+    font-size: 2.5rem;
+    color: #d4d4d8;
+    margin-top: 15vh;
 }
 
 #game-cont {
@@ -18,21 +29,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 60%;
     height: 100vh;
-    width: 100vw;
-}
-
-header {
 }
 
 #board-container {
     display: grid;
-    width: min(calc(90vh - 5.5rem), calc(90vw));
+    width: min(calc(100vh - 3rem - 5.5rem), 100%);
     aspect-ratio: 1 / 1;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     background-color: #fafafa;
     padding: 1rem;
-    margin: 5vh 5vh calc(5.5rem + 5vh) 5vh;
+    margin: 1.5rem 1.5rem calc(5.5rem + 1.5rem) 1.5rem;
 }
 
 #board-container div {
