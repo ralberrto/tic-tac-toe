@@ -67,6 +67,7 @@ const Gameboard = (function(boardContainer) {
 const player = function(name, symbol) {
     const takenSquares = matrix(3, 3, () => false);
 
+    let playerName = name;
     let won = false;
     let lost = false;
 
@@ -77,7 +78,12 @@ const player = function(name, symbol) {
     };
 
     const getName = function() {
-        return name;
+        return playerName;
+    };
+
+    const chName = function(newName) {
+        playerName = newName;
+        return newName;
     };
 
     const getSymbol = function() {
@@ -105,7 +111,7 @@ const player = function(name, symbol) {
     };
 
     return {getName, getSymbol, takeSquare, takenSquares,
-        makeWinner, isWinner, makeLoser, isLoser, resetPlayer};
+        makeWinner, isWinner, makeLoser, isLoser, resetPlayer, chName};
 };
 
 players = [player("Beto", "X"), player("Enrique", "O")];
@@ -204,13 +210,23 @@ const displayController = function(nodesBoard, players) {
         const pSymbol = document.createElement("p");
         pName.setAttribute("type", "text");
         pName.setAttribute("placeholder", players[index].getName());
+        pName.setAttribute("maxlength", 10);
         pSymbol.textContent = players[index].getSymbol();
         pSymbol.classList.add("symbol");
         container.appendChild(pName);
         container.appendChild(pSymbol);
-    }
+    };
 
     playerContainers.forEach(_displayPlayerNames);
+    const nameInputs = Array.from(document.querySelectorAll("input"));
+    console.log(nameInputs);
+
+    const _updateName = function() {
+        const index = nameInputs.indexOf(this);
+        players[index].chName(this.value.trim());
+    };
+
+    nameInputs.forEach(element => element.addEventListener("input", _updateName));
 
     const _clearBoard = function() {
         _closeModal();
