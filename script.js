@@ -219,6 +219,7 @@ const displayController = function(nodesBoard, players) {
         });
         players.forEach(player => player.resetPlayer());
         flowController.isAvailable.populateMatrix(() => true);
+        _highlightPlayer();
     };
 
     replayButtons.forEach(button => button.addEventListener("click", _clearBoard));
@@ -252,6 +253,20 @@ const displayController = function(nodesBoard, players) {
         pMessage.textContent = "empate!";
         modalBox.classList.toggle("on");
         screen.classList.toggle("on");
+        _highlightPlayer(true);
+    };
+
+    const _highlightPlayer = function(none=false) {
+        const index = flowController.getIsPlayerTurn() ? 0 : 1;
+        const index2 = Number(!Boolean(index));
+        if (!none) {
+            playerContainers[index].classList.add("active");
+            playerContainers[index2].classList.remove("active");
+        }
+        else {
+            playerContainers[index].classList.remove("active");
+            playerContainers[index2].classList.remove("active");
+        }
     };
 
     const _onClick = function() {
@@ -263,12 +278,14 @@ const displayController = function(nodesBoard, players) {
             const player2 = players[Number(!Boolean(players.indexOf(player)))];
             if (player2.isLoser()) {_declareDraw();}
         }
+        else {_highlightPlayer()};
     };
 
     const _addEvents = function(element) {
         element.addEventListener("click", _onClick);
     };
 
+    _highlightPlayer();
     nodesBoard.mapMatrix(_addEvents);
 
     return {disableElement};
