@@ -270,7 +270,7 @@ footer {
 
     #board-container {
         --footer-height: calc(3rem + 2.5rem);
-        --header-height: calc(1.5rem + 2rem + 2rem + 2rem);
+        --header-height: calc(15vh + 0.5rem + 2rem + 0.5rem + 2rem + 2rem);
         --own-margin: 3rem;
         width: min(calc(100vh - var(--footer-height) - var(--header-height) - var(--own-margin)),
         calc(100% - 3rem));
