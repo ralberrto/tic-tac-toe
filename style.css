@@ -73,6 +73,10 @@ aside.bar input {
     width: 100%
 }
 
+aside.bar input:focus {
+    opacity: 0.3;
+}
+
 aside.bar input::placeholder {
     color: #d4d4d8;
     opacity: 1;

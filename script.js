@@ -219,7 +219,6 @@ const displayController = function(nodesBoard, players) {
 
     playerContainers.forEach(_displayPlayerNames);
     const nameInputs = Array.from(document.querySelectorAll("input"));
-    console.log(nameInputs);
 
     const _updateName = function() {
         const index = nameInputs.indexOf(this);
