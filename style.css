@@ -187,18 +187,21 @@ footer {
         font-size: 3rem;
     }
 
-    button {
+    button,
+    #modal-box button {
         padding: 0.2rem;
         border-radius: 0.3rem;
     }
 
-    button p {
+    button p,
+    #modal-box button p {
         margin-left: 0.4rem;
         margin-right: 0.4rem;
         font-size: 1rem;
     }
 
-    button svg {
+    button svg,
+    #modal-box button svg {
       transform: scale(0.5);
     }
 
